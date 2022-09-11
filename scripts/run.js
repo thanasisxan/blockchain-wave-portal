@@ -17,7 +17,7 @@ const main = async () => {
     const rndTimes2 = Math.floor(Math.random() * 30) + 1;
 
     for (let i = 0; i < rndTimes1; i++) {
-        let waveTxn = await waveContract.wave();
+        let waveTxn = await waveContract.wave(`test wave ${i + rndTimes1}`);
         await waveTxn.wait();
         if (waveTxn.from in waveStoreMap) {
             waveStoreMap[waveTxn.from] += 1;
@@ -26,7 +26,7 @@ const main = async () => {
         }
     }
     for (let i = 0; i < rndTimes2; i++) {
-        let waveTxn = await waveContract.connect(randomPerson).wave();
+        let waveTxn = await waveContract.connect(randomPerson).wave(`test wave ${i + rndTimes2}`);
         await waveTxn.wait();
         if (waveTxn.from in waveStoreMap) {
             waveStoreMap[waveTxn.from] += 1;
@@ -37,7 +37,8 @@ const main = async () => {
     console.log(waveStoreMap);
     waveCount = await waveContract.getTotalWaves();
     console.log(`Total waves after: ${waveCount}`);
-
+    let allWaves = await waveContract.getAllWaves();
+    console.log(allWaves);
     let topWaverAddr = Object.keys(waveStoreMap).reduce((waverAddrPrev, waverAddrAfter) => waveStoreMap[waverAddrPrev] > waveStoreMap[waverAddrAfter] ? waverAddrPrev : waverAddrAfter);
 
     console.log(`Champion waver!: ${topWaverAddr}`);
